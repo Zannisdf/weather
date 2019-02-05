@@ -1,4 +1,6 @@
 .App {
+  border: 1px solid #ECEDEF;
+  padding: 10px;
   text-align: center;
 }
 
