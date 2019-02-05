@@ -2,26 +2,7 @@
   border: 1px solid #ECEDEF;
   padding: 10px;
   text-align: center;
-}
-
-.tabs{
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  border-bottom: 1px solid rgb(245, 245, 245);
-  background-color: rgb(226, 226, 226);
-}
-
-.tab{
-  width: 50%;
-}
-
-.tab-active{
-  background-color: rgb(245, 245, 245);
-  border-radius: 8px 8px 0 0;
-}
-
-.tab-inactive{
-  border-radius: 0 0 8px 8px;
+  width: 90%;
+  margin: 0 auto;
 }
 
