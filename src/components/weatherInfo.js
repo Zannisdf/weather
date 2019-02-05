@@ -26,19 +26,21 @@ class WeatherInfo extends Component {
         city: data.name
       }))
     })
-    this.getTime();
+    setInterval(this.getTime, 1000)
   }
 
   getTime = () => {
     const currTime = new Date();
     this.setState({
-      time: `${currTime.getHours()}:${currTime.getMinutes()}`
+      time: `${currTime.getHours()}:${currTime.getMinutes()}:${currTime.getSeconds()}`
     })
   }
 
   render(){
     return(
       <div className="info_box">
+        <p>Weather: {this.state.weather}</p>
+        <p>{this.state.description}</p>
         <p>City: {this.state.city}</p>
         <p>Current time {this.state.time}</p>
         <p>Current temp: {this.state.temp}°C</p>
