@@ -6,32 +6,31 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      weather: '',
-      description: '',
-      icon: '',
-      temp: 0.0,
-      city: '',
-      time: ''
+      location: [],
+      current: {},
+      condition: '',
+      icon: ''
     }
   }
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(position => {
       const currPos = position.coords;
+      console.log(currPos.latitude, currPos.longitude)
       this.getCurrWeather(currPos.latitude, currPos.longitude);
     }, this.error)
     setInterval(this.getTime, 1000)
   }
 
   getCurrWeather = (lat, lon) => {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=85b4be71576890900bfcd3a946908d9e`)
+    const key = '3c888c8fa4bd447eb2422702190602'
+    fetch(`https://api.apixu.com/v1/current.json?key=${key}&q=${lat},${lon}`)
     .then( response => response.json())
     .then( data => this.setState({
-      weather: data.weather[0].main,
-      description: data.weather[0].description,
-      icon: data.weather[0].icon,
-      temp: data.main.temp,
-      city: data.name
+      location: [data.location.name, data.location.country],
+      current: {tempC: data.current.temp_c, tempF: data.current.temp_f},
+      condition: data.current.condition.text,
+      icon: data.current.condition.icon
     }));
   }
 
@@ -47,16 +46,15 @@ class App extends Component {
   }
 
   render() {
-    const { icon, weather, description, city, time, temp } = this.state;
+    const { icon, condition, location, time, current } = this.state;
     return (
       <div className="App">
         <WeatherInfo 
           icon={icon}
-          weather={weather}
-          description={description}
-          city={city}
+          description={condition}
+          city={location.join(', ')}
           time={time}
-          temp={temp}
+          temp={current.tempC}
           />
       </div>
     );
