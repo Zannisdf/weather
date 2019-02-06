@@ -9,7 +9,8 @@ class App extends Component {
       location: [],
       current: {},
       condition: '',
-      icon: ''
+      icon: '',
+      forecast: []
     }
   }
 
@@ -23,14 +24,26 @@ class App extends Component {
   }
 
   getCurrWeather = (lat, lon) => {
-    const key = '3c888c8fa4bd447eb2422702190602'
-    fetch(`https://api.apixu.com/v1/current.json?key=${key}&q=${lat},${lon}`)
+    const key = '3c888c8fa4bd447eb2422702190602',
+          daysNumber= '5';
+    fetch(`https://api.apixu.com/v1/forecast.json?key=${key}&q=${lat},${lon}&days=${daysNumber}`)
     .then( response => response.json())
     .then( data => this.setState({
       location: [data.location.name, data.location.country],
       current: {tempC: data.current.temp_c, tempF: data.current.temp_f},
       condition: data.current.condition.text,
-      icon: data.current.condition.icon
+      icon: data.current.condition.icon,
+      forecast: data.forecast.forecastday.map(day => ({
+        date: day.date,
+        temp: {
+          maxTempC: day.day.maxtemp_c,
+          maxTempF: day.day.maxtemp_f,
+          minTempC: day.day.mintemp_c,
+          minTempF: day.day.mintemp_f
+        },
+        condition: day.day.condition.text,
+        icon: day.day.condition.icon
+      }))
     }));
   }
 
@@ -46,7 +59,7 @@ class App extends Component {
   }
 
   render() {
-    const { icon, condition, location, time, current } = this.state;
+    const { icon, condition, location, time, current, forecast } = this.state;
     return (
       <div className="App">
         <WeatherInfo 
@@ -54,8 +67,15 @@ class App extends Component {
           description={condition}
           city={location.join(', ')}
           time={time}
-          temp={current.tempC}
-          />
+          temp={current.tempC} />
+        {forecast.map( day => 
+        <WeatherInfo
+          icon={day.icon}
+          description={day.description}
+          max={day.temp.maxTempC}
+          min={day.temp.minTempC}
+          key={day.date} />
+        )}
       </div>
     );
   }
