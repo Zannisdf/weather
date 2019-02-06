@@ -19,7 +19,7 @@ class App extends Component {
     navigator.geolocation.getCurrentPosition(position => {
       const currPos = position.coords;
       this.getCurrWeather(currPos.latitude, currPos.longitude);
-    }, this.error)
+    }, this.handleError)
     setInterval(this.getTime, 1000)
   }
 
@@ -45,10 +45,11 @@ class App extends Component {
         condition: day.day.condition.text,
         icon: day.day.condition.icon
       }))
-    }));
+    }))
+    .catch(this.handleError);
   }
 
-  error = () => this.setState({ error: true });
+  handleError = () => this.setState({ appStatus: 'error' });
 
   formatTime = n => n < 10 ? `0${n}` : n; 
 
@@ -84,8 +85,13 @@ class App extends Component {
             </div>
           </div>
         }
-        {appStatus === 'loading' &&
+        { appStatus === 'loading' &&
           <div className='loadingIcon'></div>
+        }
+        { appStatus === 'error' &&
+          <div className='error'>
+            <p>There has been an error, please try again.</p>
+          </div>
         }
       </div>
     );
