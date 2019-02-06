@@ -6,6 +6,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
+      appStatus: 'loading',
       location: [],
       current: {},
       condition: '',
@@ -17,7 +18,6 @@ class App extends Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(position => {
       const currPos = position.coords;
-      console.log(currPos.latitude, currPos.longitude)
       this.getCurrWeather(currPos.latitude, currPos.longitude);
     }, this.error)
     setInterval(this.getTime, 1000)
@@ -29,6 +29,7 @@ class App extends Component {
     fetch(`https://api.apixu.com/v1/forecast.json?key=${key}&q=${lat},${lon}&days=${daysNumber}`)
     .then( response => response.json())
     .then( data => this.setState({
+      appStatus: 'ok',
       location: [data.location.name, data.location.country],
       current: {tempC: data.current.temp_c, tempF: data.current.temp_f},
       condition: data.current.condition.text,
@@ -59,25 +60,33 @@ class App extends Component {
   }
 
   render() {
-    const { icon, condition, location, time, current, forecast } = this.state;
+    const { appStatus, icon, condition, location, time, current, forecast } = this.state;
+    
     return (
       <div className="App">
-        <WeatherInfo
-          icon={icon}
-          description={condition}
-          city={location.join(', ')}
-          time={time}
-          temp={current.tempC} />
-        <div className="forecast">
-        {forecast.map( day => 
-          <WeatherInfo
-            icon={day.icon}
-            description={day.description}
-            max={day.temp.maxTempC}
-            min={day.temp.minTempC}
-            key={day.date} />
-          )}
-        </div>
+        { appStatus === 'ok' &&
+          <div>
+            <WeatherInfo
+              icon={icon}
+              description={condition}
+              city={location.join(', ')}
+              time={time}
+              temp={current.tempC} />
+            <div className="forecast">
+            {forecast.map( day => 
+              <WeatherInfo
+                icon={day.icon}
+                description={day.description}
+                max={day.temp.maxTempC}
+                min={day.temp.minTempC}
+                key={day.date} />
+              )}
+            </div>
+          </div>
+        }
+        {appStatus === 'loading' &&
+          <div className='loadingIcon'></div>
+        }
       </div>
     );
   }
