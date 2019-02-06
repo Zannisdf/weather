@@ -6,3 +6,21 @@
   margin: 0 auto;
 }
 
+/* .forecast{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+} */
+
+.info_box{
+  border: 1px solid #ECEDEF;
+  border-radius: 5px;
+  padding: 1rem 2.5rem;
+  margin: 1rem 0;
+}
+
+@media(max-width: 1200px){
+  .forecast{
+    justify-content: space-around;
+  }
+}

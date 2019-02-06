@@ -62,20 +62,22 @@ class App extends Component {
     const { icon, condition, location, time, current, forecast } = this.state;
     return (
       <div className="App">
-        <WeatherInfo 
+        <WeatherInfo
           icon={icon}
           description={condition}
           city={location.join(', ')}
           time={time}
           temp={current.tempC} />
+        <div className="forecast">
         {forecast.map( day => 
-        <WeatherInfo
-          icon={day.icon}
-          description={day.description}
-          max={day.temp.maxTempC}
-          min={day.temp.minTempC}
-          key={day.date} />
-        )}
+          <WeatherInfo
+            icon={day.icon}
+            description={day.description}
+            max={day.temp.maxTempC}
+            min={day.temp.minTempC}
+            key={day.date} />
+          )}
+        </div>
       </div>
     );
   }
